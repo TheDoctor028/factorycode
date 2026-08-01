@@ -2,6 +2,8 @@
 #include <iostream>
 #include <sstream>
 #include <wasmtime.hh>
+#include <filesystem>
+#include <random>
 
 
 using namespace wasmtime;
@@ -14,8 +16,24 @@ std::string readFile(const char *name) {
     return strStream.str();
 }
 
-std::vector<uint8_t> complie_cpp_wasm(const std::string &file) {
-    std::string command = "zig c++ -target wasm32-freestanding -shared -O3 " + file + "-o script.wasm";
+static Module compile_cpp_wasm(Engine &engine, const std::string &file) {
+
+    const auto tmpDir = std::filesystem::temp_directory_path();
+    const auto random = std::rand() % 1000000000000000000;
+
+    const std::string output = tmpDir.string() + std::to_string(random)  + ".wasm";
+
+    const std::string command = "zig c++ -target wasm32-freestanding -O3 " + file + " -o " + output + " -Wl,--no-entry";
+    if (const int status = std::system(command.c_str()); status != 0) {
+        std::cerr << "Failed to compile cpp to wasm." << "\n\n";
+        exit(status);
+    }
+
+    auto contet = readFile(output.c_str());
+
+    auto module = Module::compile(engine, Span(reinterpret_cast<uint8_t*>(contet.data()), contet.size())).unwrap();
+
+    return module;
 }
 
 int main() {
@@ -26,14 +44,7 @@ int main() {
     std::cout << "Compiling module\n";
     Engine engine;
 
-    //auto module =
-      //  Module::compile(engine, readFile("examples/hello.wat")).unwrap();
-
-    std::string str = readFile("examples/hello.wasm");
-    const Span span(reinterpret_cast<uint8_t*>(str.data()), str.size());
-
-
-    auto module = Module::compile(engine, span).unwrap();
+    const auto module = compile_cpp_wasm(engine, "examples/hello.cpp");
 
     // After a module is compiled we create a `Store` which will contain
     // instantiated modules and other items like host functions. A Store
