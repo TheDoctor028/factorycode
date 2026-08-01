@@ -14,8 +14,8 @@ std::string readFile(const char *name) {
     return strStream.str();
 }
 
-void complie_cpp_wasm(const char *file) {
-//std::string command = "tools/zig c++ -target wasm32-freestanding -shared -O3 temp_script.cpp -o script.wasm";
+std::vector<uint8_t> complie_cpp_wasm(const std::string &file) {
+    std::string command = "zig c++ -target wasm32-freestanding -shared -O3 " + file + "-o script.wasm";
 }
 
 int main() {
@@ -25,8 +25,15 @@ int main() {
     // default like this is here.
     std::cout << "Compiling module\n";
     Engine engine;
-    auto module =
-        Module::compile(engine, readFile("examples/hello.wat")).unwrap();
+
+    //auto module =
+      //  Module::compile(engine, readFile("examples/hello.wat")).unwrap();
+
+    std::string str = readFile("examples/hello.wasm");
+    const Span span(reinterpret_cast<uint8_t*>(str.data()), str.size());
+
+
+    auto module = Module::compile(engine, span).unwrap();
 
     // After a module is compiled we create a `Store` which will contain
     // instantiated modules and other items like host functions. A Store
