@@ -14,6 +14,10 @@ std::string readFile(const char *name) {
     return strStream.str();
 }
 
+void complie_cpp_wasm(const char *file) {
+//std::string command = "tools/zig c++ -target wasm32-freestanding -shared -O3 temp_script.cpp -o script.wasm";
+}
+
 int main() {
     // First the wasm module needs to be compiled. This is done with a global
     // "compilation environment" within an `Engine`. Note that engines can be
