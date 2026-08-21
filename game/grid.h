@@ -2,10 +2,19 @@
 
 #include <cmath>
 
-struct Point2D {
-    float x;
-    float y;
+enum Direction {
+    north = 0,
+    east,
+    south,
+    west
 };
+
+struct Point2D {
+    int x;
+    int y;
+};
+
+constexpr Point2D NULL_POINT = {-99, -99};
 
 struct Vec2 {
     float x = 0.0f;
@@ -31,3 +40,7 @@ struct Vec2 {
 
     [[nodiscard]] float dot(const Vec2& o) const { return x * o.x + y * o.y; }
 };
+
+Vec2 delta(Point2D a, Point2D b);
+
+Direction deg_direction(const float deg);

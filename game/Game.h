@@ -12,16 +12,7 @@
 #include "recipe.h"
 
 namespace factorycode {
-    constexpr Point2D NULL_POINT = {-99, -99};
-
     void debug(char* message);
-
-    enum Direction {
-        north = 0,
-        east,
-        south,
-        west
-    };
 
     class Entity {
     public:
@@ -46,9 +37,14 @@ namespace factorycode {
             position = NULL_POINT;
         }
 
-        void sleep(const uint dur) {
+        virtual void sleep(const uint dur) {
             alarm += dur;
             sleeping = true;
+        }
+
+        [[nodiscard]]
+        Point2D get_position() const {
+            return position;
         }
     protected:
         Point2D position = NULL_POINT;
@@ -57,7 +53,7 @@ namespace factorycode {
         bool sleeping = false;
     };
 
-    class Machine: Entity {
+    class Machine: public Entity {
     public:
         explicit Machine(Recipe recipe): recipe(std::move(recipe)) {
         }
@@ -86,6 +82,10 @@ namespace factorycode {
             MaterialStackList output = output_inventory;
             output_inventory.clear();
             return output;
+        }
+
+        void load(const MaterialStackList& materials) {
+            input_inventory += materials;
         }
     protected:
         std::set<Machine*> inputs;
@@ -118,10 +118,24 @@ namespace factorycode {
         }
     };
 
-    class Consumer: Machine {
+    class Consumer : Machine {
         explicit Consumer(const Recipe &recipe) : Machine(recipe) {
             // output = {};
         }
+    };
+
+    class Connection: Entity {
+    public:
+        Connection(Machine& in, Machine& out) : input(in), output(out)  {}
+
+        void tick() override {
+            Entity::tick();
+            output.load(input.unload());
+        }
+    protected:
+        Machine& input;
+        Machine& output;
+    private:
     };
 
     class Map {
@@ -170,24 +184,23 @@ namespace factorycode {
             m_tick++;
         }
 
-        void place(Entity& entity) {
-            map.set(0, 0, &entity);
-            entity.place({0, 0});
+        void place(Entity& entity, const Point2D p) {
+            // Check that its free
+            map.set(p.x, p.y, &entity);
+            entity.place(p);
         }
 
-        Direction getDirection(Entity& ent1, Entity& ent2) const {
-            if (!ent1.is_placed() || !ent2.is_placed()) throw std::exception();
-
-
-        }
-
-        bool connectEntity(Entity& ent1, Entity& ent2) {
+        static bool connectMachines(Machine& ent1, Machine& ent2) {
             // Check if both entity is placed
+
             if (!ent1.is_placed() || !ent2.is_placed()) return false;
+            const Vec2 d = delta(ent1.get_position(), ent2.get_position());
+            const Direction dir = deg_direction(d.angle_degrees());
 
-
-
-
+            if (const float r = d.length(); r == 1.0) {
+                const auto conn = Connection(ent1, ent2);
+                return true;
+            }
             return false;
         }
 
