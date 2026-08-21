@@ -7,6 +7,12 @@ project(factorycode)
 set(CMAKE_CXX_STANDARD 26)
 
 add_executable(factorycode main.cpp lib/channel/channel.hpp lib/channel/channel.cpp
+        game/Game.cpp
+        game/Game.h
+        game/materials.h
+        game/materials.cpp
+        game/materials.cpp
+        game/Recipe.h
 )
 
 target_include_directories(factorycode PUBLIC wasmtime)
