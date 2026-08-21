@@ -3,12 +3,17 @@
 #include <set>
 #include <unordered_map>
 #include <utility>
+#include <cmath>
+#include <mdspan>
 
+#include  "grid.h"
 #include "wasmtime.hh"
 #include "materials.h"
 #include "recipe.h"
 
 namespace factorycode {
+    constexpr Point2D NULL_POINT = {-99, -99};
+
     void debug(char* message);
 
     enum Direction {
@@ -31,8 +36,14 @@ namespace factorycode {
             return placed;
         }
 
-        void set_placed(const bool state) {
-            placed = state;
+        void place(Point2D p) {
+            placed = true;
+            position = p;
+        }
+
+        void pickup() {
+            placed = false;
+            position = NULL_POINT;
         }
 
         void sleep(const uint dur) {
@@ -40,6 +51,7 @@ namespace factorycode {
             sleeping = true;
         }
     protected:
+        Point2D position = NULL_POINT;
         bool placed = false;
         uint alarm = 0;
         bool sleeping = false;
@@ -160,7 +172,23 @@ namespace factorycode {
 
         void place(Entity& entity) {
             map.set(0, 0, &entity);
-            entity.set_placed(true);
+            entity.place({0, 0});
+        }
+
+        Direction getDirection(Entity& ent1, Entity& ent2) const {
+            if (!ent1.is_placed() || !ent2.is_placed()) throw std::exception();
+
+
+        }
+
+        bool connectEntity(Entity& ent1, Entity& ent2) {
+            // Check if both entity is placed
+            if (!ent1.is_placed() || !ent2.is_placed()) return false;
+
+
+
+
+            return false;
         }
 
     protected:
