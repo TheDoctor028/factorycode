@@ -54,4 +54,18 @@ namespace factorycode {
         std::strong_ordering operator<=>(MaterialStackList& comp);
     };
 
+    /**
+     * @brief Converts a Material enum value to string name.
+     * @param m Material to convert.
+     * @return String representation of material.
+     */
+    std::string to_string(Material m);
+
+    /**
+     * @brief Converts a MaterialStackList to a formatted string.
+     * @param list Material stack list.
+     * @return Formatted string representation.
+     */
+    std::string to_string(const MaterialStackList& list);
+
 }

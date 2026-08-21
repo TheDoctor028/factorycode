@@ -1,4 +1,5 @@
 #include "machines.h"
+#include "logging.h"
 
 #include <utility>
 
@@ -13,6 +14,8 @@ namespace factorycode {
         if (progress == 0 && can_craft()) {
             input_inventory -= recipe.input;
             inventory += recipe.input;
+            debug("[Machine: " + recipe.name + "] Started crafting at " + to_string(position) +
+                  " with input=" + to_string(recipe.input));
         }
 
         if (!inventory.empty()) {
@@ -20,8 +23,13 @@ namespace factorycode {
                 progress = 0;
                 inventory.clear();
                 output_inventory += recipe.output;
+                debug("[Machine: " + recipe.name + "] Finished crafting at " + to_string(position) +
+                      " produced output=" + to_string(recipe.output) +
+                      ", output_inventory=" + to_string(output_inventory));
             } else {
                 progress++;
+                debug("[Machine: " + recipe.name + "] Crafting progress: " + std::to_string(progress) +
+                      "/" + std::to_string(recipe.time) + " at " + to_string(position));
             }
         }
     }
@@ -29,11 +37,20 @@ namespace factorycode {
     MaterialStackList Machine::unload() {
         MaterialStackList output = output_inventory;
         output_inventory.clear();
+        if (!output.empty()) {
+            debug("[Machine: " + recipe.name + "] Unloaded " + to_string(output) +
+                  " from position " + to_string(position));
+        }
         return output;
     }
 
     void Machine::load(const MaterialStackList& materials) {
-        input_inventory += materials;
+        if (!materials.empty()) {
+            input_inventory += materials;
+            debug("[Machine: " + recipe.name + "] Loaded " + to_string(materials) +
+                  " at position " + to_string(position) +
+                  ", total input_inventory=" + to_string(input_inventory));
+        }
     }
 
     bool Machine::can_craft() {
@@ -56,15 +73,25 @@ namespace factorycode {
     void Conveyor::tick() {
         Entity::tick();
 
-        output_inventory += input_inventory;
-        input_inventory.clear();
+        if (!input_inventory.empty()) {
+            debug("[Conveyor] Moving input " + to_string(input_inventory) +
+                  " to output at position " + to_string(position));
+            output_inventory += input_inventory;
+            input_inventory.clear();
+        }
     }
 
     Connection::Connection(Machine& in, Machine& out) : input(in), output(out) {}
 
     void Connection::tick() {
         Entity::tick();
-        output.load(input.unload());
+        MaterialStackList transferred = input.unload();
+        if (!transferred.empty()) {
+            debug("[Connection] Transferring " + to_string(transferred) +
+                  " from " + to_string(input.get_position()) +
+                  " to " + to_string(output.get_position()));
+            output.load(transferred);
+        }
     }
 
 }

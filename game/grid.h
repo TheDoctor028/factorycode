@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <string>
 
 /**
  * @brief Represents cardinal directions on the grid.
@@ -54,3 +55,17 @@ Vec2 delta(Point2D a, Point2D b);
  * @return Corresponding Direction.
  */
 Direction deg_direction(float deg);
+
+/**
+ * @brief Converts a Point2D to a string representation.
+ * @param p Point to convert.
+ * @return Formatted string (x, y).
+ */
+std::string to_string(Point2D p);
+
+/**
+ * @brief Converts a Direction enum to its string name.
+ * @param d Direction to convert.
+ * @return String name of the direction.
+ */
+std::string to_string(Direction d);

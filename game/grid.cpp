@@ -49,3 +49,17 @@ Direction deg_direction(const float deg) {
     throw std::runtime_error("Deg cant be turned in to direction due its not matching any direction");
 }
 
+std::string to_string(Point2D p) {
+    return "(" + std::to_string(p.x) + ", " + std::to_string(p.y) + ")";
+}
+
+std::string to_string(Direction d) {
+    switch (d) {
+        case Direction::north: return "north";
+        case Direction::east:  return "east";
+        case Direction::south: return "south";
+        case Direction::west:  return "west";
+    }
+    return "unknown";
+}
+

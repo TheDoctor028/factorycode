@@ -1,6 +1,7 @@
 #include "Material.h"
 
 #include <ranges>
+#include <string>
 
 namespace factorycode {
 
@@ -87,6 +88,29 @@ namespace factorycode {
             if (comp >= val) return std::strong_ordering::greater;
         }
         return std::strong_ordering::less;
+    }
+
+    std::string to_string(Material m) {
+        switch (m) {
+            case Material::Void:    return "Void";
+            case Material::Coal:    return "Coal";
+            case Material::IronOre: return "IronOre";
+            case Material::Iron:    return "Iron";
+        }
+        return "Unknown";
+    }
+
+    std::string to_string(const MaterialStackList& list) {
+        if (list.empty()) return "{}";
+        std::string result = "{ ";
+        bool first = true;
+        for (const auto& [mat, qty] : list) {
+            if (!first) result += ", ";
+            result += to_string(mat) + ": " + std::to_string(qty);
+            first = false;
+        }
+        result += " }";
+        return result;
     }
 
 }
