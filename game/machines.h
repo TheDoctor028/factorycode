@@ -70,6 +70,19 @@ namespace factorycode {
         }
     };
 
+    class Conveyor: public Machine {
+    public:
+        explicit Conveyor() : Machine(NoneVoid) {}
+
+        void tick() override {
+            Entity::tick();
+
+            output_inventory += input_inventory;
+            input_inventory.clear();
+        }
+
+    };
+
     class Connection: public Entity {
     public:
         Connection(Machine& in, Machine& out) : input(in), output(out)  {}

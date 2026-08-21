@@ -8,6 +8,7 @@
 
 namespace factorycode {
     enum Operation {
+        None,
         Mine,
         Smelt,
     };
@@ -32,6 +33,8 @@ namespace factorycode {
         };
     }
 
+    const Recipe NoneVoid = recipe("void", {}, {}, 1) ;
+
     const inline std::vector<Recipe> recipes =  {
         recipe("ironMine", {}, {{IronOre, 1}}, 10),
         recipe("coalMine", {}, {{Coal, 1}}, 10),
@@ -39,6 +42,11 @@ namespace factorycode {
     };
 
     inline const std::unordered_map<Operation, std::unordered_map<Material, Recipe> > recipes_v2 = {
+        {
+            None,{
+            { Void, NoneVoid }
+            }
+        },
         // Mind recipes
         {
             Mine, {

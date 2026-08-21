@@ -5,7 +5,8 @@
 
 namespace factorycode {
     enum Material {
-        Coal = 0,
+        Void,
+        Coal,
         IronOre,
         Iron,
     };
