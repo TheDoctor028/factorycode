@@ -43,4 +43,4 @@ struct Vec2 {
 
 Vec2 delta(Point2D a, Point2D b);
 
-Direction deg_direction(const float deg);
+Direction deg_direction(float deg);

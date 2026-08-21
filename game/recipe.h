@@ -1,7 +1,9 @@
 #pragma once
 #include <unordered_map>
+#include <string>
+#include <vector>
 
-#include "materials.h"
+#include "Material.h"
 
 
 namespace factorycode {

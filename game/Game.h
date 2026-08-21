@@ -1,142 +1,16 @@
 #pragma once
 
-#include <set>
 #include <unordered_map>
-#include <utility>
-#include <cmath>
 #include <mdspan>
 
 #include  "grid.h"
 #include "wasmtime.hh"
 #include "Material.h"
-#include "recipe.h"
+#include "entity.h"
+#include "machines.h"
 
 namespace factorycode {
     void debug(char* message);
-
-    class Entity {
-    public:
-        virtual ~Entity() = default;
-
-        virtual void tick() {
-            if (sleeping && alarm-- == 0) sleeping = false;
-        }
-
-        [[nodiscard]]
-        bool is_placed() const {
-            return placed;
-        }
-
-        void place(Point2D p) {
-            placed = true;
-            position = p;
-        }
-
-        void pickup() {
-            placed = false;
-            position = NULL_POINT;
-        }
-
-        virtual void sleep(const uint dur) {
-            alarm += dur;
-            sleeping = true;
-        }
-
-        [[nodiscard]]
-        Point2D get_position() const {
-            return position;
-        }
-    protected:
-        Point2D position = NULL_POINT;
-        bool placed = false;
-        uint alarm = 0;
-        bool sleeping = false;
-    };
-
-    class Machine: public Entity {
-    public:
-        explicit Machine(Recipe recipe): recipe(std::move(recipe)) {
-        }
-        const Recipe recipe;
-
-        void tick() override {
-            Entity::tick();
-
-            if (progress == 0 && can_craft()) {
-                input_inventory -= recipe.input;
-                inventory += recipe.input;
-            }
-
-            if (!inventory.empty()) {
-                if (progress == recipe.time) {
-                    progress = 0;
-                    inventory.clear();
-                    output_inventory += recipe.output;
-                } else {
-                    progress++;
-                }
-            }
-        }
-
-        MaterialStackList unload() {
-            MaterialStackList output = output_inventory;
-            output_inventory.clear();
-            return output;
-        }
-
-        void load(const MaterialStackList& materials) {
-            input_inventory += materials;
-        }
-    protected:
-        std::set<Machine*> inputs;
-        std::set<Machine> outputs;
-
-        MaterialStackList input_inventory;
-        MaterialStackList inventory;
-        MaterialStackList output_inventory;
-
-        uint progress = 0;
-
-        void load() {
-            for (auto& input: inputs) {
-                const auto mtl = input->unload();
-                input_inventory += mtl;
-            }
-        }
-
-        bool can_craft() {
-            return recipe.input <= input_inventory;
-        }
-
-        void process() {
-        }
-    };
-
-    class Producer: Machine {
-        explicit Producer(const Recipe &recipe) : Machine(recipe) {
-            // input = {};
-        }
-    };
-
-    class Consumer : Machine {
-        explicit Consumer(const Recipe &recipe) : Machine(recipe) {
-            // output = {};
-        }
-    };
-
-    class Connection: public Entity {
-    public:
-        Connection(Machine& in, Machine& out) : input(in), output(out)  {}
-
-        void tick() override {
-            Entity::tick();
-            output.load(input.unload());
-        }
-    protected:
-        Machine& input;
-        Machine& output;
-    private:
-    };
 
     class Map {
     public:
