@@ -1,6 +1,7 @@
 #include "machines.h"
 #include "logging.h"
 
+#include <string>
 #include <utility>
 
 namespace factorycode {
@@ -14,8 +15,8 @@ namespace factorycode {
         if (progress == 0 && can_craft()) {
             input_inventory -= recipe.input;
             inventory += recipe.input;
-            debug("[Machine: " + recipe.name + "] Started crafting at " + to_string(position) +
-                  " with input=" + to_string(recipe.input));
+            debug("[" + entityType() + ": " + recipe.name + "] Started crafting at " +
+                  to_string(position) + " with input=" + to_string(recipe.input));
         }
 
         if (!inventory.empty()) {
@@ -23,13 +24,14 @@ namespace factorycode {
                 progress = 0;
                 inventory.clear();
                 output_inventory += recipe.output;
-                debug("[Machine: " + recipe.name + "] Finished crafting at " + to_string(position) +
-                      " produced output=" + to_string(recipe.output) +
+                debug("[" + entityType() + ": " + recipe.name + "] Finished crafting at " +
+                      to_string(position) + " produced output=" + to_string(recipe.output) +
                       ", output_inventory=" + to_string(output_inventory));
             } else {
                 progress++;
-                debug("[Machine: " + recipe.name + "] Crafting progress: " + std::to_string(progress) +
-                      "/" + std::to_string(recipe.time) + " at " + to_string(position));
+                debug("[" + entityType() + ": " + recipe.name + "] Crafting progress: " +
+                      std::to_string(progress) + "/" + std::to_string(recipe.time) + " at " +
+                      to_string(position));
             }
         }
     }
@@ -38,8 +40,8 @@ namespace factorycode {
         MaterialStackList output = output_inventory;
         output_inventory.clear();
         if (!output.empty()) {
-            debug("[Machine: " + recipe.name + "] Unloaded " + to_string(output) +
-                  " from position " + to_string(position));
+            debug("[" + entityType() + ": " + recipe.name + "] Unloaded " +
+                  to_string(output) + " from position " + to_string(position));
         }
         return output;
     }
@@ -47,8 +49,8 @@ namespace factorycode {
     void Machine::load(const MaterialStackList& materials) {
         if (!materials.empty()) {
             input_inventory += materials;
-            debug("[Machine: " + recipe.name + "] Loaded " + to_string(materials) +
-                  " at position " + to_string(position) +
+            debug("[" + entityType() + ": " + recipe.name + "] Loaded " +
+                  to_string(materials) + " at position " + to_string(position) +
                   ", total input_inventory=" + to_string(input_inventory));
         }
     }
@@ -74,7 +76,7 @@ namespace factorycode {
         Entity::tick();
 
         if (!input_inventory.empty()) {
-            debug("[Conveyor] Moving input " + to_string(input_inventory) +
+            debug("[" + entityType() + "] Moving input " + to_string(input_inventory) +
                   " to output at position " + to_string(position));
             output_inventory += input_inventory;
             input_inventory.clear();
@@ -87,7 +89,7 @@ namespace factorycode {
         Entity::tick();
         MaterialStackList transferred = input.unload();
         if (!transferred.empty()) {
-            debug("[Connection] Transferring " + to_string(transferred) +
+            debug("[" + entityType() + "] Transferring " + to_string(transferred) +
                   " from " + to_string(input.get_position()) +
                   " to " + to_string(output.get_position()));
             output.load(transferred);

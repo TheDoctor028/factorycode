@@ -1,5 +1,6 @@
 #pragma once
 #include <sys/types.h>
+#include <string>
 
 #include "grid.h"
 
@@ -46,6 +47,23 @@ namespace factorycode {
          */
         [[nodiscard]]
         Point2D get_position() const;
+
+        /**
+         * @brief Returns the static entity type name for Entity.
+         * @return Static string representing entity type.
+         */
+        static std::string staticEntityType() {
+            return "Entity";
+        }
+
+        /**
+         * @brief Returns the entity type name of this instance.
+         * @return String representing entity type.
+         */
+        [[nodiscard]]
+        virtual std::string entityType() const {
+            return staticEntityType();
+        }
 
     protected:
         Point2D position = NULL_POINT;

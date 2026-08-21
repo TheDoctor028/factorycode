@@ -30,6 +30,15 @@ namespace factorycode {
          */
         void load(const MaterialStackList& materials);
 
+        static std::string staticEntityType() {
+            return "Machine";
+        }
+
+        [[nodiscard]]
+        std::string entityType() const override {
+            return staticEntityType();
+        }
+
     protected:
         MaterialStackList input_inventory;
         MaterialStackList inventory;
@@ -48,6 +57,15 @@ namespace factorycode {
     class Producer : public Machine {
     public:
         explicit Producer(const Recipe& recipe);
+
+        static std::string staticEntityType() {
+            return "Producer";
+        }
+
+        [[nodiscard]]
+        std::string entityType() const override {
+            return staticEntityType();
+        }
     };
 
     /**
@@ -56,6 +74,15 @@ namespace factorycode {
     class Consumer : public Machine {
     public:
         explicit Consumer(const Recipe& recipe);
+
+        static std::string staticEntityType() {
+            return "Consumer";
+        }
+
+        [[nodiscard]]
+        std::string entityType() const override {
+            return staticEntityType();
+        }
     };
 
     /**
@@ -66,6 +93,15 @@ namespace factorycode {
         explicit Conveyor();
 
         void tick() override;
+
+        static std::string staticEntityType() {
+            return "Conveyor";
+        }
+
+        [[nodiscard]]
+        std::string entityType() const override {
+            return staticEntityType();
+        }
     };
 
     /**
@@ -76,6 +112,15 @@ namespace factorycode {
         Connection(Machine& in, Machine& out);
 
         void tick() override;
+
+        static std::string staticEntityType() {
+            return "Connection";
+        }
+
+        [[nodiscard]]
+        std::string entityType() const override {
+            return staticEntityType();
+        }
 
     protected:
         Machine& input;

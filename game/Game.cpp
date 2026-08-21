@@ -51,7 +51,7 @@ namespace factorycode {
     void Game::place(Entity& entity, const Point2D p) {
         map.set(p.x, p.y, &entity);
         entity.place(p);
-        info("[Game] Placed entity at " + to_string(p));
+        info("[Game] Placed " + entity.entityType() + " at " + to_string(p));
     }
 
     bool Game::connectMachines(Machine& ent1, Machine& ent2) {
@@ -65,9 +65,9 @@ namespace factorycode {
         if (const float r = d.length(); r == 1.0) {
             const auto conn = Connection(ent1, ent2);
             entities.push_back(conn);
-            info("[Game] Connected machine at " + to_string(ent1.get_position()) +
-                 " to machine at " + to_string(ent2.get_position()) +
-                 " in direction " + to_string(dir));
+            info("[Game] Connected " + ent1.entityType() + " at " +
+                 to_string(ent1.get_position()) + " to " + ent2.entityType() +
+                 " at " + to_string(ent2.get_position()) + " in direction " + to_string(dir));
             return true;
         }
         warn("[Game] Cannot connect machines: distance is not 1.0 (distance=" +
