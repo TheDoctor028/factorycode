@@ -9,9 +9,9 @@
 #include "Material.h"
 #include "entity.h"
 #include "machines.h"
+#include "logging.h"
 
 namespace factorycode {
-    void debug(char* message);
 
     /**
      * @brief 2D Grid map of entities.

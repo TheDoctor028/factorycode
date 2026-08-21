@@ -1,14 +1,8 @@
 #include "Game.h"
 
-#include <iostream>
 #include <stdexcept>
 
 namespace factorycode {
-    void debug(char *message) {
-#ifdef DEBUG
-        std::cout << "[DEBUG]: " << message << std::endl;
-#endif
-    }
 
     Map::Map(const uint x, const uint y) : size_x(x), size_y(y) {
         for (int i_x = 0; i_x < size_x; i_x++) {

@@ -11,7 +11,6 @@ add_executable(factorycode main.cpp lib/channel/channel.hpp lib/channel/channel.
         game/Game.h
         game/Material.h
         game/Material.cpp
-        game/Material.cpp
         game/Recipe.h
         game/grid.h
         game/grid.cpp
@@ -19,6 +18,8 @@ add_executable(factorycode main.cpp lib/channel/channel.hpp lib/channel/channel.
         game/entity.h
         game/machines.cpp
         game/machines.h
+        game/logging.cpp
+        game/logging.h
 )
 
 target_include_directories(factorycode PUBLIC wasmtime)
