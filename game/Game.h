@@ -1,9 +1,10 @@
 #pragma once
 
 #include <unordered_map>
-#include <mdspan>
+#include <vector>
+#include <sys/types.h>
 
-#include  "grid.h"
+#include "grid.h"
 #include "wasmtime.hh"
 #include "Material.h"
 #include "entity.h"
@@ -12,77 +13,42 @@
 namespace factorycode {
     void debug(char* message);
 
+    /**
+     * @brief 2D Grid map of entities.
+     */
     class Map {
     public:
-        Map(const uint x, const uint y): size_x(x), size_y(y) {
-            for (int i_x = 0; i_x < size_x; i_x++) {
-                for (int i_y = 0; i_y < size_y; i_y++) {
-                    map.insert(map.end(), std::vector<Entity*>());
-                    map[i_x].insert(map[i_x].end(), nullptr);
-                }
-            }
-        }
+        Map(const uint x, const uint y);
 
         const uint size_x;
         const uint size_y;
 
         [[nodiscard]]
-        Entity* get(const uint x, const uint y) const {
-            if (x > size_x || y > size_y) throw std::runtime_error("x or y coordinates are out of boundaries.");
+        Entity* get(const uint x, const uint y) const;
 
-            return map.at(x).at(y);
-        }
-
-        void set(const uint x, const uint y, Entity* entity) {
-            if (x > size_x || y > size_y) throw std::runtime_error("x or y coordinates are out of boundaries.");
-
-            map.at(x).at(y) = entity;
-        }
+        void set(const uint x, const uint y, Entity* entity);
 
     protected:
         std::vector<std::vector<Entity*>> map;
     };
 
+    /**
+     * @brief Main Game engine orchestrating entities, ticks, and wasm runtime.
+     */
     class Game {
     public:
         // TODO dynamic map size
-        Game() : wasm_store(wasm_engine), map(10, 10) {
+        Game();
 
-        }
+        void tick();
 
-        void tick() {
-            for (auto& entity : entities) {
-                entity.tick();
-            }
+        void place(Entity& entity, const Point2D p);
 
-            m_tick++;
-        }
-
-        void place(Entity& entity, const Point2D p) {
-            // Check that its free
-            map.set(p.x, p.y, &entity);
-            entity.place(p);
-        }
-
-        bool connectMachines(Machine& ent1, Machine& ent2) {
-            // Check if both entity is placed
-
-            if (!ent1.is_placed() || !ent2.is_placed()) return false;
-            const Vec2 d = delta(ent1.get_position(), ent2.get_position());
-            const Direction dir = deg_direction(d.angle_degrees());
-
-            if (const float r = d.length(); r == 1.0) {
-                const auto conn = Connection(ent1, ent2);
-                entities.push_back(conn);
-                return true;
-            }
-            return false;
-        }
+        bool connectMachines(Machine& ent1, Machine& ent2);
 
     protected:
         wasmtime::Engine wasm_engine;
         wasmtime::Store wasm_store;
-
 
         int credit = 0;
         uint m_tick = 0;
@@ -93,7 +59,5 @@ namespace factorycode {
 
         std::vector<Entity> entities;
         Map map;
-
-        private:
     };
 }

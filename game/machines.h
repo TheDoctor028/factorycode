@@ -1,6 +1,6 @@
 #pragma once
 
-#include <set>
+#include <sys/types.h>
 
 #include "entity.h"
 #include "Material.h"
@@ -8,40 +8,28 @@
 
 namespace factorycode {
 
-    class Machine: public Entity {
+    /**
+     * @brief Represents a machine that crafts items according to a recipe.
+     */
+    class Machine : public Entity {
     public:
-        explicit Machine(Recipe recipe): recipe(std::move(recipe)) {
-        }
+        explicit Machine(Recipe recipe);
         const Recipe recipe;
 
-        void tick() override {
-            Entity::tick();
+        void tick() override;
 
-            if (progress == 0 && can_craft()) {
-                input_inventory -= recipe.input;
-                inventory += recipe.input;
-            }
+        /**
+         * @brief Unloads output inventory materials.
+         * @return MaterialStackList containing the output materials.
+         */
+        MaterialStackList unload();
 
-            if (!inventory.empty()) {
-                if (progress == recipe.time) {
-                    progress = 0;
-                    inventory.clear();
-                    output_inventory += recipe.output;
-                } else {
-                    progress++;
-                }
-            }
-        }
+        /**
+         * @brief Loads materials into the input inventory.
+         * @param materials Materials to load.
+         */
+        void load(const MaterialStackList& materials);
 
-        MaterialStackList unload() {
-            MaterialStackList output = output_inventory;
-            output_inventory.clear();
-            return output;
-        }
-
-        void load(const MaterialStackList& materials) {
-            input_inventory += materials;
-        }
     protected:
         MaterialStackList input_inventory;
         MaterialStackList inventory;
@@ -49,52 +37,49 @@ namespace factorycode {
 
         uint progress = 0;
 
-        bool can_craft() {
-            return recipe.input <= input_inventory;
-        }
+        bool can_craft();
 
-        void process() {
-        }
+        void process();
     };
 
-    class Producer: public Machine{
-        explicit Producer(const Recipe &recipe) : Machine(recipe) {
-            // input = {};
-        }
+    /**
+     * @brief Producer machine that produces resources.
+     */
+    class Producer : public Machine {
+    public:
+        explicit Producer(const Recipe& recipe);
     };
 
+    /**
+     * @brief Consumer machine that consumes resources.
+     */
     class Consumer : public Machine {
-
-        explicit Consumer(const Recipe &recipe) : Machine(recipe) {
-            // output = {};
-        }
+    public:
+        explicit Consumer(const Recipe& recipe);
     };
 
-    class Conveyor: public Machine {
+    /**
+     * @brief Conveyor machine that transfers items.
+     */
+    class Conveyor : public Machine {
     public:
-        explicit Conveyor() : Machine(NoneVoid) {}
+        explicit Conveyor();
 
-        void tick() override {
-            Entity::tick();
-
-            output_inventory += input_inventory;
-            input_inventory.clear();
-        }
-
+        void tick() override;
     };
 
-    class Connection: public Entity {
+    /**
+     * @brief Connection entity transferring materials between two machines.
+     */
+    class Connection : public Entity {
     public:
-        Connection(Machine& in, Machine& out) : input(in), output(out)  {}
+        Connection(Machine& in, Machine& out);
 
-        void tick() override {
-            Entity::tick();
-            output.load(input.unload());
-        }
+        void tick() override;
+
     protected:
         Machine& input;
         Machine& output;
-    private:
     };
 
 }

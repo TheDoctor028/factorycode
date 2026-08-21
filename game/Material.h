@@ -1,5 +1,6 @@
 #pragma once
-#include <ranges>
+#include <compare>
+#include <initializer_list>
 #include <unordered_map>
 #include <utility>
 
@@ -13,82 +14,44 @@ namespace factorycode {
 
     typedef std::unordered_map<Material, int> material_map;
 
+    /**
+     * @brief Collection of materials and their quantities.
+     */
     class MaterialStackList {
     protected:
         material_map collection;
     public:
         MaterialStackList() = default;
-        explicit MaterialStackList(material_map m): collection(std::move(m)) { }
-        MaterialStackList(const std::initializer_list<std::pair<const Material, int>> initLis): collection(initLis) {}
-
-
-        [[nodiscard]]
-        auto begin() const { return collection.begin(); }
+        explicit MaterialStackList(material_map m);
+        MaterialStackList(const std::initializer_list<std::pair<const Material, int>> initLis);
 
         [[nodiscard]]
-        auto end() const { return collection.end(); }
+        material_map::const_iterator begin() const;
 
-        void clear() { return collection.clear(); }
+        [[nodiscard]]
+        material_map::const_iterator end() const;
 
-        auto insert(std::pair<Material, int> m) { return collection.insert(m); }
+        void clear();
 
-        auto erase(const Material m) { return collection.erase(m); }
+        std::pair<material_map::iterator, bool> insert(std::pair<Material, int> m);
 
-        auto find(const Material m) { return collection.find(m); }
+        material_map::size_type erase(const Material m);
 
-        [[nodiscard]] bool empty() const { return collection.empty(); }
+        material_map::iterator find(const Material m);
 
-        void clear_zero_or_less() {
-            for (const auto& pair : collection) {
-                if (pair.second <= 0 ) this->collection.erase(pair.first);
-            }
-        }
+        [[nodiscard]] bool empty() const;
 
-        bool operator==(const MaterialStackList& outer) const {
-            for (const auto& element : outer) {
-                const auto e = collection.find(element.first);
-                if (e == collection.end() || e->second != element.second) return false;
-            }
-            return true;
-        }
+        void clear_zero_or_less();
 
-        MaterialStackList& operator+=(const MaterialStackList& other) {
-            for (auto value: other) {
-                if (auto inner = collection.find(value.first); inner != collection.end()) {
-                    inner->second += value.second;
-                } else {
-                    collection.insert(value);
-                }
-            }
-            return *this;
-        }
+        bool operator==(const MaterialStackList& outer) const;
 
-        MaterialStackList& operator-=(const MaterialStackList& other) {
-            for (auto value: other) {
-                if (auto inner = collection.find(value.first); inner != collection.end()) {
-                    inner->second -= value.second;
-                } else {
-                    value.second *= -1;
-                    collection.insert(value);
-                }
-            }
-            return *this;
-        }
+        MaterialStackList& operator+=(const MaterialStackList& other);
 
-        std::strong_ordering operator<=>(const int n) {
-            for (const auto &val: collection | std::views::values) {
-                if (val < n) return std::strong_ordering::less;
-                if (val > n) return std::strong_ordering::greater;
-            }
-            return std::strong_ordering::equal;
-        }
+        MaterialStackList& operator-=(const MaterialStackList& other);
 
-        std::strong_ordering operator<=>(MaterialStackList& comp) {
-            for (const auto val: collection | std::views::values) {
-                if (comp >= val) return std::strong_ordering::greater;
-            }
-            return std::strong_ordering::less;
-        }
+        std::strong_ordering operator<=>(const int n);
+
+        std::strong_ordering operator<=>(MaterialStackList& comp);
     };
 
-};
+}
