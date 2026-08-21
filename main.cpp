@@ -5,6 +5,9 @@
 #include <filesystem>
 #include <random>
 
+#include "game/Game.h"
+#include "game/recipe.h"
+
 
 using namespace wasmtime;
 
@@ -36,7 +39,7 @@ static Module compile_cpp_wasm(Engine &engine, const std::string &file) {
     return module;
 }
 
-int main() {
+void webassTest() {
     // First the wasm module needs to be compiled. This is done with a global
     // "compilation environment" within an `Engine`. Note that engines can be
     // further configured through `Config` if desired instead of using the
@@ -75,5 +78,24 @@ int main() {
     run.call(store, {}).unwrap();
 
     std::cout << "Done\n";
+}
+
+int main() {
+    using namespace factorycode;
+    auto game = Game();
+
+    auto coalMine = Machine(recipes_v2.at(Operation::Mine).at(Material::Coal));
+    auto ironMine = Machine(recipes_v2.at(Operation::Mine).at(Material::IronOre));
+
+    auto smelter = Machine(recipes_v2.at(Operation::Smelt).at(Material::Iron));
+
+    game.place(coalMine, {0, 0});
+    game.place(ironMine, {1, 0});
+
+    game.place(smelter, {1, 1});
+
+
+    //game.place();
+
     return 0;
 }

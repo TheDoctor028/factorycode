@@ -1,3 +1,3 @@
-#include "materials.h"
+#include "Material.h"
 
 using namespace factorycode;

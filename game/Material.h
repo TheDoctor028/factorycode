@@ -4,13 +4,13 @@
 #include <utility>
 
 namespace factorycode {
-    enum Materials {
+    enum Material {
         Coal = 0,
         IronOre,
         Iron,
     };
 
-    typedef std::unordered_map<Materials, int> material_map;
+    typedef std::unordered_map<Material, int> material_map;
 
     class MaterialStackList {
     protected:
@@ -18,7 +18,7 @@ namespace factorycode {
     public:
         MaterialStackList() = default;
         explicit MaterialStackList(material_map m): collection(std::move(m)) { }
-        MaterialStackList(const std::initializer_list<std::pair<const Materials, int>> initLis): collection(initLis) {}
+        MaterialStackList(const std::initializer_list<std::pair<const Material, int>> initLis): collection(initLis) {}
 
 
         [[nodiscard]]
@@ -29,11 +29,11 @@ namespace factorycode {
 
         void clear() { return collection.clear(); }
 
-        auto insert(std::pair<Materials, int> m) { return collection.insert(m); }
+        auto insert(std::pair<Material, int> m) { return collection.insert(m); }
 
-        auto erase(const Materials m) { return collection.erase(m); }
+        auto erase(const Material m) { return collection.erase(m); }
 
-        auto find(const Materials m) { return collection.find(m); }
+        auto find(const Material m) { return collection.find(m); }
 
         [[nodiscard]] bool empty() const { return collection.empty(); }
 
@@ -88,16 +88,6 @@ namespace factorycode {
             }
             return std::strong_ordering::less;
         }
-    };
-
-    class Material {
-    public:
-        explicit Material(const Materials type): type(type) {
-
-        }
-        const Materials type;
-    protected:
-
     };
 
 };

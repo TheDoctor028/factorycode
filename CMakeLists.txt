@@ -9,9 +9,9 @@ set(CMAKE_CXX_STANDARD 26)
 add_executable(factorycode main.cpp lib/channel/channel.hpp lib/channel/channel.cpp
         game/Game.cpp
         game/Game.h
-        game/materials.h
-        game/materials.cpp
-        game/materials.cpp
+        game/Material.h
+        game/Material.cpp
+        game/Material.cpp
         game/Recipe.h
         game/grid.h
         game/grid.cpp

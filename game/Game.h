@@ -8,7 +8,7 @@
 
 #include  "grid.h"
 #include "wasmtime.hh"
-#include "materials.h"
+#include "Material.h"
 #include "recipe.h"
 
 namespace factorycode {
@@ -124,7 +124,7 @@ namespace factorycode {
         }
     };
 
-    class Connection: Entity {
+    class Connection: public Entity {
     public:
         Connection(Machine& in, Machine& out) : input(in), output(out)  {}
 
@@ -190,7 +190,7 @@ namespace factorycode {
             entity.place(p);
         }
 
-        static bool connectMachines(Machine& ent1, Machine& ent2) {
+        bool connectMachines(Machine& ent1, Machine& ent2) {
             // Check if both entity is placed
 
             if (!ent1.is_placed() || !ent2.is_placed()) return false;
@@ -199,6 +199,7 @@ namespace factorycode {
 
             if (const float r = d.length(); r == 1.0) {
                 const auto conn = Connection(ent1, ent2);
+                entities.push_back(conn);
                 return true;
             }
             return false;
@@ -214,7 +215,7 @@ namespace factorycode {
 
         bool paused = false;
 
-        std::unordered_map<Materials, uint> inventory;
+        std::unordered_map<Material, uint> inventory;
 
         std::vector<Entity> entities;
         Map map;
