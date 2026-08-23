@@ -51,6 +51,7 @@ namespace factorycode {
     void Game::place(Entity& entity, const Point2D p) {
         map.set(p.x, p.y, &entity);
         entity.place(p);
+        entities.push_back(entity);
         info("[Game] Placed " + entity.entityType() + " at " + to_string(p));
     }
 

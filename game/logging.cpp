@@ -7,9 +7,7 @@ namespace factorycode {
     void log(LogLevel level, std::string_view message) {
         switch (level) {
             case LogLevel::Debug:
-#if defined(DEBUG) || defined(ENABLE_DEBUG_LOGGING) || !defined(NDEBUG)
                 std::cout << "[DEBUG]: " << message << std::endl;
-#endif
                 break;
             case LogLevel::Info:
                 std::cout << "[INFO]: " << message << std::endl;
@@ -24,21 +22,13 @@ namespace factorycode {
     }
 
     void debug(std::string_view message) {
-#if defined(DEBUG) || defined(ENABLE_DEBUG_LOGGING) || !defined(NDEBUG)
         std::cout << "[DEBUG]: " << message << std::endl;
-#else
-        (void)message;
-#endif
     }
 
     void debug(const char* message) {
-#if defined(DEBUG) || defined(ENABLE_DEBUG_LOGGING) || !defined(NDEBUG)
         if (message != nullptr) {
             std::cout << "[DEBUG]: " << message << std::endl;
         }
-#else
-        (void)message;
-#endif
     }
 
     void info(std::string_view message) {

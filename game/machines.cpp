@@ -16,7 +16,9 @@ namespace factorycode {
             input_inventory -= recipe.input;
             inventory += recipe.input;
             debug("[" + entityType() + ": " + recipe.name + "] Started crafting at " +
-                  to_string(position) + " with input=" + to_string(recipe.input));
+                  to_string(position) + " with input=" + to_string(recipe.input) +
+                  " | input_inventory=" + to_string(input_inventory) +
+                  ", crafting_inventory=" + to_string(inventory));
         }
 
         if (!inventory.empty()) {
@@ -26,12 +28,12 @@ namespace factorycode {
                 output_inventory += recipe.output;
                 debug("[" + entityType() + ": " + recipe.name + "] Finished crafting at " +
                       to_string(position) + " produced output=" + to_string(recipe.output) +
-                      ", output_inventory=" + to_string(output_inventory));
+                      " | output_inventory=" + to_string(output_inventory));
             } else {
                 progress++;
                 debug("[" + entityType() + ": " + recipe.name + "] Crafting progress: " +
                       std::to_string(progress) + "/" + std::to_string(recipe.time) + " at " +
-                      to_string(position));
+                      to_string(position) + " | crafting_inventory=" + to_string(inventory));
             }
         }
     }
@@ -41,7 +43,8 @@ namespace factorycode {
         output_inventory.clear();
         if (!output.empty()) {
             debug("[" + entityType() + ": " + recipe.name + "] Unloaded " +
-                  to_string(output) + " from position " + to_string(position));
+                  to_string(output) + " from position " + to_string(position) +
+                  " | remaining output_inventory=" + to_string(output_inventory));
         }
         return output;
     }
@@ -51,7 +54,7 @@ namespace factorycode {
             input_inventory += materials;
             debug("[" + entityType() + ": " + recipe.name + "] Loaded " +
                   to_string(materials) + " at position " + to_string(position) +
-                  ", total input_inventory=" + to_string(input_inventory));
+                  " | new input_inventory=" + to_string(input_inventory));
         }
     }
 
@@ -76,10 +79,13 @@ namespace factorycode {
         Entity::tick();
 
         if (!input_inventory.empty()) {
-            debug("[" + entityType() + "] Moving input " + to_string(input_inventory) +
-                  " to output at position " + to_string(position));
+            debug("[" + entityType() + "] Moving input to output at position " +
+                  to_string(position) + " | input=" + to_string(input_inventory));
             output_inventory += input_inventory;
             input_inventory.clear();
+            debug("[" + entityType() + "] Updated inventories at position " +
+                  to_string(position) + " | input=" + to_string(input_inventory) +
+                  ", output=" + to_string(output_inventory));
         }
     }
 
