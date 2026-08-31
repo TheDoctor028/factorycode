@@ -16,15 +16,15 @@ namespace factorycode {
     struct Recipe {
         std::string name;
 
-        MaterialStackList& input;
+        MaterialStackList input;
 
-        MaterialStackList& output;
+        MaterialStackList output;
 
         // How many tick it takes to create the recipe.
         uint time;
     };
 
-    static Recipe recipe(const std::string& name, MaterialStackList input, MaterialStackList output, const uint time = 0) {
+    static Recipe recipe(const std::string& name, const MaterialStackList& input, const MaterialStackList& output, const uint time = 0) {
         return {
             .name = name,
             .input = input,

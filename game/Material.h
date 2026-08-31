@@ -52,6 +52,8 @@ namespace factorycode {
         std::strong_ordering operator<=>(const int n);
 
         std::strong_ordering operator<=>(MaterialStackList& comp);
+
+        std::strong_ordering operator<=>(MaterialStackList comp);
     };
 
     /**

@@ -84,6 +84,15 @@ namespace factorycode {
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList& comp) {
+        // TODO implement
+        for (const auto val : collection | std::views::values) {
+            if (comp >= val) return std::strong_ordering::greater;
+        }
+        return std::strong_ordering::less;
+    }
+
+    std::strong_ordering MaterialStackList::operator<=>(MaterialStackList comp) {
+        // TODO implement
         for (const auto val : collection | std::views::values) {
             if (comp >= val) return std::strong_ordering::greater;
         }
