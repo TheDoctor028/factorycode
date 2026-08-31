@@ -40,8 +40,10 @@ namespace factorycode {
 
     void Game::tick() {
         info("[Game] Starting tick " + std::to_string(m_tick));
-        for (auto& entity : entities) {
-            entity.tick();
+        for (auto* entity : entities) {
+            if (entity != nullptr) {
+                entity->tick();
+            }
         }
 
         m_tick++;
@@ -51,7 +53,7 @@ namespace factorycode {
     void Game::place(Entity& entity, const Point2D p) {
         map.set(p.x, p.y, &entity);
         entity.place(p);
-        entities.push_back(entity);
+        entities.push_back(&entity);
         info("[Game] Placed " + entity.entityType() + " at " + to_string(p));
     }
 
@@ -64,8 +66,9 @@ namespace factorycode {
         const Direction dir = deg_direction(d.angle_degrees());
 
         if (const float r = d.length(); r == 1.0) {
-            const auto conn = Connection(ent1, ent2);
-            entities.push_back(conn);
+            auto conn = std::make_unique<Connection>(ent1, ent2);
+            entities.push_back(conn.get());
+            owned_entities.push_back(std::move(conn));
             info("[Game] Connected " + ent1.entityType() + " at " +
                  to_string(ent1.get_position()) + " to " + ent2.entityType() +
                  " at " + to_string(ent2.get_position()) + " in direction " + to_string(dir));

@@ -23,7 +23,7 @@ namespace factorycode {
     public:
         MaterialStackList() = default;
         explicit MaterialStackList(material_map m);
-        MaterialStackList(const std::initializer_list<std::pair<const Material, int>> initLis);
+        MaterialStackList(std::initializer_list<std::pair<const Material, int>> initLis);
 
         [[nodiscard]]
         material_map::const_iterator begin() const;

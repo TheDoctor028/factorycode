@@ -57,7 +57,8 @@ namespace factorycode {
 
         std::unordered_map<Material, uint> inventory;
 
-        std::vector<Entity> entities;
+        std::vector<Entity*> entities;
+        std::vector<std::unique_ptr<Entity>> owned_entities;
         Map map;
     };
 }
