@@ -83,7 +83,7 @@ namespace factorycode {
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList& comp) {
-        auto res = std::strong_ordering::equivalent;
+        auto res = std::strong_ordering::less;
 
         for (const auto [this_key, this_val] : collection) {
             for (const auto [comp_key, comp_val] : comp.collection) {
@@ -96,7 +96,16 @@ namespace factorycode {
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList comp) {
-        return this <=> &comp;
+        auto res = std::strong_ordering::less;
+
+        for (const auto [this_key, this_val] : collection) {
+            for (const auto [comp_key, comp_val] : comp.collection) {
+                const auto key_match = this_key == comp_key;
+                if (key_match && this_val > comp_val) return std::strong_ordering::less;
+                if (key_match && this_val < comp_val) res = std::strong_ordering::greater;
+            }
+        }
+        return res;
     }
 
     bool MaterialStackList::has(const int n, const Material lookM) {

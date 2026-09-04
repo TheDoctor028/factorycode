@@ -16,7 +16,7 @@ namespace factorycode {
             input_inventory -= recipe.input;
             inventory += recipe.input;
             debug("[" + entityType() + ": " + recipe.name + "] Started crafting at " +
-                  to_string(position) + " with input=" + to_string(recipe.input) +
+                  to_string(position) + " with recipe_input=" + to_string(recipe.input) +
                   " | input_inventory=" + to_string(input_inventory) +
                   ", crafting_inventory=" + to_string(inventory));
         }
@@ -59,7 +59,7 @@ namespace factorycode {
     }
 
     bool Machine::can_craft() {
-        return recipe.input <= input_inventory;
+        return input_inventory >= recipe.input;
     }
 
     void Machine::process() {
