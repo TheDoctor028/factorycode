@@ -78,28 +78,37 @@ namespace factorycode {
     std::strong_ordering MaterialStackList::operator<=>(const int n) {
         for (const auto& val : collection | std::views::values) {
             if (val < n) return std::strong_ordering::less;
-            if (val > n) return std::strong_ordering::greater;
         }
-        return std::strong_ordering::equal;
+        return std::strong_ordering::greater;
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList& comp) {
-        // TODO implement
-        for (const auto val : collection | std::views::values) {
-            if (comp >= val) return std::strong_ordering::greater;
+        auto res = std::strong_ordering::equivalent;
+
+        for (const auto [this_key, this_val] : collection) {
+            for (const auto [comp_key, comp_val] : comp.collection) {
+                const auto key_match = this_key == comp_key;
+                if (key_match && this_val < comp_val) return std::strong_ordering::less;
+                if (key_match && this_val > comp_val) res = std::strong_ordering::greater;
+            }
         }
-        return std::strong_ordering::less;
+        return res;
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList comp) {
-        // TODO implement
-        for (const auto val : collection | std::views::values) {
-            if (comp >= val) return std::strong_ordering::greater;
-        }
-        return std::strong_ordering::less;
+        return this <=> &comp;
     }
 
-    std::string to_string(Material m) {
+    bool MaterialStackList::has(const int n, const Material lookM) {
+        for (auto [mat, count] : collection) {
+            if (mat == lookM) {
+                return count >= n;
+            }
+        }
+        return false;
+    }
+
+    std::string to_string(const Material m) {
         switch (m) {
             case Material::Void:    return "Void";
             case Material::Coal:    return "Coal";

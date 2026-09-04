@@ -54,6 +54,8 @@ namespace factorycode {
         std::strong_ordering operator<=>(MaterialStackList& comp);
 
         std::strong_ordering operator<=>(MaterialStackList comp);
+
+        bool has(const int n, const Material m);
     };
 
     /**
