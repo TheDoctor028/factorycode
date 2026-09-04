@@ -6,8 +6,8 @@ int main() {
     using namespace factorycode;
     auto game = Game();
 
-    auto coalMine = Machine(recipes_v2.at(Operation::Mine).at(Material::Coal));
-    auto ironMine = Machine(recipes_v2.at(Operation::Mine).at(Material::IronOre));
+    auto coalMine = Producer(recipes_v2.at(Operation::Mine).at(Material::Coal));
+    auto ironMine = Producer(recipes_v2.at(Operation::Mine).at(Material::IronOre));
 
     auto conveyor = Conveyor();
 
@@ -24,9 +24,9 @@ int main() {
     game.connectMachines(ironMine, smelter);
     game.connectMachines(conveyor, smelter);
 
-    game.tick();
-    game.tick();
-    game.tick();
-    game.tick();
+
+    for (int i = 0; i < 20; ++i) {
+        game.tick();
+    }
     return 0;
 }

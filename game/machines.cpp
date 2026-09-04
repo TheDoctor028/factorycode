@@ -62,6 +62,10 @@ namespace factorycode {
         return input_inventory >= recipe.input;
     }
 
+    bool Producer::can_craft() {
+       return true;
+    }
+
     void Machine::process() {
     }
 

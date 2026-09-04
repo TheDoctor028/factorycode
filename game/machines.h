@@ -46,7 +46,7 @@ namespace factorycode {
 
         uint progress = 0;
 
-        bool can_craft();
+        virtual bool can_craft();
 
         void process();
     };
@@ -56,6 +56,7 @@ namespace factorycode {
      */
     class Producer : public Machine {
     public:
+
         explicit Producer(const Recipe& recipe);
 
         static std::string staticEntityType() {
@@ -66,6 +67,8 @@ namespace factorycode {
         std::string entityType() const override {
             return staticEntityType();
         }
+    protected:
+        bool can_craft() override;
     };
 
     /**

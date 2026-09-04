@@ -50,8 +50,8 @@ namespace factorycode {
         // Mind recipes
         {
             Mine, {
-                {Coal, recipe("coalMine", {}, {{Material::Coal, 1}}, 10)},
-                {IronOre,  recipe("ironMine", {}, {{IronOre, 1}}, 10),}
+                {Coal, recipe("coalMine", {{Void, 0}}, {{Material::Coal, 1}}, 10)},
+                {IronOre,  recipe("ironMine", {{Void, 0}}, {{IronOre, 1}}, 10),}
             },
         },
         // Smelt recipes
