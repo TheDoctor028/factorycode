@@ -17,6 +17,7 @@ add_executable(unit_tests
         test_machines.cpp
         test_channel.cpp
         test_material_bdd.cpp
+        integration/test_factory_simulation.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
