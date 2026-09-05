@@ -3,8 +3,20 @@ project(factorycode)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/wasmtime/crates/c-api
-        ${CMAKE_CURRENT_BINARY_DIR}/wasmtime)
+include(FetchContent)
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/wasmtime-target")
+set(ENV{CARGO_TARGET_DIR} "${CMAKE_CURRENT_BINARY_DIR}/wasmtime-target")
+
+FetchContent_Declare(
+    wasmtime
+    GIT_REPOSITORY https://github.com/bytecodealliance/wasmtime.git
+    GIT_TAG        v47.0.1
+    GIT_SHALLOW    TRUE
+    GIT_SUBMODULES ""
+    SOURCE_SUBDIR  crates/c-api
+)
+FetchContent_MakeAvailable(wasmtime)
 
 set(GAME_SOURCES
         lib/channel/channel.hpp
@@ -27,7 +39,6 @@ set(GAME_SOURCES
 add_library(factorycode_lib STATIC ${GAME_SOURCES})
 target_include_directories(factorycode_lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/wasmtime
 )
 target_link_libraries(factorycode_lib PUBLIC wasmtime)
 
