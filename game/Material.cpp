@@ -76,31 +76,14 @@ namespace factorycode {
         return *this;
     }
 
-    std::strong_ordering MaterialStackList::operator<=>(const int n) {
+    std::strong_ordering MaterialStackList::operator<=>(const int n) const {
         for (const auto& val : collection | std::views::values) {
             if (val < n) return std::strong_ordering::less;
         }
         return std::strong_ordering::greater;
     }
 
-    std::strong_ordering MaterialStackList::operator<=>(MaterialStackList& comp) {
-        int match = 0;
-        int equal = 0;
-        for (const auto [this_key, this_val] : collection) {
-            for (const auto [comp_key, comp_val] : comp.collection) {
-                if (this_key == comp_key) {
-                    match++;
-
-                    if (this_val > comp_val) return std::strong_ordering::less;
-                    if (this_val == comp_val) equal++;
-                }
-            }
-        }
-
-        return equal == collection.size() ? std::strong_ordering::equal :  match == collection.size() ? std::strong_ordering::greater : std::strong_ordering::less;
-    }
-
-    std::strong_ordering MaterialStackList::operator<=>(MaterialStackList comp) {
+    std::strong_ordering MaterialStackList::operator<=>(const MaterialStackList& comp) const {
         int match = 0;
         int equal = 0;
         for (const auto [this_key, this_val] : collection) {

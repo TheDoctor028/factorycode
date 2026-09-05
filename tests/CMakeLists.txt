@@ -9,13 +9,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 add_executable(unit_tests
-    test_material.cpp
-    test_game.cpp
-    test_entity.cpp
-    test_grid.cpp
-    test_logging.cpp
-    test_machines.cpp
-    test_channel.cpp
+        test_material.cpp
+        test_game.cpp
+        test_entity.cpp
+        test_grid.cpp
+        test_logging.cpp
+        test_machines.cpp
+        test_channel.cpp
+        test_material_bdd.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
