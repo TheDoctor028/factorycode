@@ -25,7 +25,7 @@ int main() {
     game.connectMachines(conveyor, smelter);
 
 
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 22; ++i) {
         game.tick();
     }
     return 0;

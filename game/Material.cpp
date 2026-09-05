@@ -2,6 +2,7 @@
 
 #include <ranges>
 #include <string>
+#include <vector>
 
 namespace factorycode {
 
@@ -83,20 +84,37 @@ namespace factorycode {
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList& comp) {
-        auto res = !collection.empty() ? std::strong_ordering::equal : std::strong_ordering::less;
-
+        int match = 0;
+        int equal = 0;
         for (const auto [this_key, this_val] : collection) {
             for (const auto [comp_key, comp_val] : comp.collection) {
-                const auto key_match = this_key == comp_key;
-                if (key_match && this_val > comp_val) return std::strong_ordering::less;
-                if (key_match && this_val < comp_val) res = std::strong_ordering::greater;
+                if (this_key == comp_key) {
+                    match++;
+
+                    if (this_val > comp_val) return std::strong_ordering::less;
+                    if (this_val == comp_val) equal++;
+                }
             }
         }
-        return res;
+
+        return equal == collection.size() ? std::strong_ordering::equal :  match == collection.size() ? std::strong_ordering::greater : std::strong_ordering::less;
     }
 
     std::strong_ordering MaterialStackList::operator<=>(MaterialStackList comp) {
-      return this <=> &comp;
+        int match = 0;
+        int equal = 0;
+        for (const auto [this_key, this_val] : collection) {
+            for (const auto [comp_key, comp_val] : comp.collection) {
+                if (this_key == comp_key) {
+                    match++;
+
+                    if (this_val > comp_val) return std::strong_ordering::less;
+                    if (this_val == comp_val) equal++;
+                }
+            }
+        }
+
+        return equal == collection.size() ? std::strong_ordering::equal :  match == collection.size() ? std::strong_ordering::greater : std::strong_ordering::less;
     }
 
     bool MaterialStackList::has(const int n, const Material lookM) {
