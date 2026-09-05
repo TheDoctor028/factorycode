@@ -1,4 +1,4 @@
-#include "Material.h"
+#include "material.h"
 
 #include <ranges>
 #include <string>

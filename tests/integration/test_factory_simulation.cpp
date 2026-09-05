@@ -1,5 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
-#include "game/Game.h"
+#include "game/game.h"
 #include "game/recipe.h"
 
 using namespace factorycode;

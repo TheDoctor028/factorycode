@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Material.h"
+#include "material.h"
 
 
 namespace factorycode {

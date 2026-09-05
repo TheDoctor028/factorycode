@@ -6,7 +6,7 @@
 
 #include "grid.h"
 #include "wasmtime.hh"
-#include "Material.h"
+#include "material.h"
 #include "entity.h"
 #include "machines.h"
 #include "logging.h"

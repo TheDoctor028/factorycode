@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <compare>
-#include "game/Material.h"
+#include "game/material.h"
 
 using namespace factorycode;
 

@@ -3,7 +3,7 @@
 #include <sys/types.h>
 
 #include "entity.h"
-#include "Material.h"
+#include "material.h"
 #include "recipe.h"
 
 namespace factorycode {

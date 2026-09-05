@@ -9,10 +9,10 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/wasmtime/crates/c-api
 set(GAME_SOURCES
         lib/channel/channel.hpp
         lib/channel/channel.cpp
-        game/Game.cpp
-        game/Game.h
-        game/Material.h
-        game/Material.cpp
+        game/game.cpp
+        game/game.h
+        game/material.h
+        game/material.cpp
         game/recipe.h
         game/grid.h
         game/grid.cpp

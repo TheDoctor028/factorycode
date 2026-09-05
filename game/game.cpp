@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "game.h"
 #include "logging.h"
 
 #include <stdexcept>
